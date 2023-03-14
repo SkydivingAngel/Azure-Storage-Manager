@@ -72,7 +72,7 @@ namespace Azure_Storage_Manager.Controllers
                 return await Task.FromResult(new BadRequestObjectResult(ex.Message));
             }
 
-            return Ok(@"Creato!");
+            return Ok(@"File Creato!");
         }
     }
 }
