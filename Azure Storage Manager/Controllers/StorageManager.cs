@@ -64,7 +64,7 @@ namespace Azure_Storage_Manager.Controllers
                 Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(Path.Combine(env.ContentRootPath, "appsettings.json"), true);  // <--- true SOVRASCRIVE
 
 
-                blobClient = blobContainer.GetBlobClient("test/appsettings.json");
+                blobClient = blobContainer.GetBlobClient("test/appsettingssubdirectory.json");
                 uploadFile = await blobClient.UploadAsync(Path.Combine(env.ContentRootPath, "appsettings.json"), true);  // <--- true SOVRASCRIVE
 
             }
