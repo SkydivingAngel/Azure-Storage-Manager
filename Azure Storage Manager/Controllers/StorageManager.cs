@@ -60,11 +60,13 @@ namespace Azure_Storage_Manager.Controllers
             {
                 BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
 
-                BlobClient blobClient = blobContainer.GetBlobClient("IDataProtector.txt");
-
-                string result = string.Empty;
-
+                BlobClient blobClient = blobContainer.GetBlobClient("appsettings.json");
                 Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(Path.Combine(env.ContentRootPath, "appsettings.json"), true);  // <--- true SOVRASCRIVE
+
+
+                blobClient = blobContainer.GetBlobClient("test/appsettings.json");
+                uploadFile = await blobClient.UploadAsync(Path.Combine(env.ContentRootPath, "appsettings.json"), true);  // <--- true SOVRASCRIVE
+
             }
             catch (Exception ex)
             {
