@@ -1,5 +1,8 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace Azure_Storage_Manager.Controllers
 {
@@ -7,17 +10,26 @@ namespace Azure_Storage_Manager.Controllers
     [Route("api")]
     public class StorageManager : ControllerBase
     {
+        private IWebHostEnvironment env;
+        private readonly IConfiguration configuration;
+
+        public StorageManager(IWebHostEnvironment env, IConfiguration configuration)
+        {
+            this.env = env;
+            this.configuration = configuration;
+        }
+
         [HttpGet, Route("createcontainer")]
         public async Task<IActionResult> CreateContainer()
         {
             try
             {
-                BlobContainerClient blobContainer = new BlobContainerClient("DefaultEndpointsProtocol=https;AccountName=gasparistorage;AccountKey=LEJPG03t9GfKpQgL0GaO5LTiAgo9bmqYP/8gNUC0xDL19KRdXUZuSNooOMuGhcbnVFc38z4W2z5V+AStLLZCfw==;EndpointSuffix=core.windows.net", "createifnotexistscontainer");
+                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
 
                 string result = string.Empty;
 
                 //use code below to check if the container exists, then determine to create it or not
-                bool exists = blobContainer.Exists();
+                bool exists = await blobContainer.ExistsAsync();
                 if (!exists)
                 {
                     result += "Does not exists";
@@ -41,6 +53,25 @@ namespace Azure_Storage_Manager.Controllers
             return Ok(@"Creato!");
         }
 
+        [HttpGet, Route("createfile")]
+        public async Task<IActionResult> CreateFile()
+        {
+            try
+            {
+                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
 
+                BlobClient blobClient = blobContainer.GetBlobClient("IDataProtector.txt");
+
+                string result = string.Empty;
+
+                Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(Path.Combine(env.ContentRootPath, "appsettings.json"), true);  // <--- true SOVRASCRIVE
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new BadRequestObjectResult(ex.Message));
+            }
+
+            return Ok(@"Creato!");
+        }
     }
 }
