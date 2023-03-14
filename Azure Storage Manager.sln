@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure Storage Manager", "Azure Storage Manager\Azure Storage Manager.csproj", "{BF27986D-91E9-4CE4-9D9E-45B932CB3B13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF27986D-91E9-4CE4-9D9E-45B932CB3B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF27986D-91E9-4CE4-9D9E-45B932CB3B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF27986D-91E9-4CE4-9D9E-45B932CB3B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF27986D-91E9-4CE4-9D9E-45B932CB3B13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1BF8ADC-7AFC-422C-B2CB-0D09C9D2E313}
+	EndGlobalSection
+EndGlobal
