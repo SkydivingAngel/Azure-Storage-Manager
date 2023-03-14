@@ -1,8 +1,5 @@
-﻿using Azure;
-using Azure.Storage.Blobs;
-using Azure_Storage_Manager.Models;
+﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace Azure_Storage_Manager.Controllers
 {
