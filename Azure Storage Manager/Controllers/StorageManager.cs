@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 
@@ -75,5 +76,29 @@ namespace Azure_Storage_Manager.Controllers
 
             return Ok(@"File Creato!");
         }
+
+        [AllowAnonymous]
+        [HttpGet, Route("downloadfile")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> DownloadFile()
+        {
+            try
+            {
+                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
+
+                BlobClient blobClient = blobContainer.GetBlobClient("test/appsettingssubdirectory.json");
+                var result = await blobClient.DownloadContentAsync();
+
+                var byteArray = result.Value.Content.ToArray();
+                await System.IO.File.WriteAllBytesAsync(Path.Combine(env.ContentRootPath, "Downloaded_" + Guid.NewGuid().ToString("N") + ".txt"), byteArray);
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new BadRequestObjectResult(ex.Message));
+            }
+
+            return Ok(@"File Scaricato!");
+        }
+
     }
 }
