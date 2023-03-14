@@ -20,7 +20,7 @@ namespace Azure_Storage_Manager.Controllers
         }
 
         [HttpGet, Route("weatherforecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> GetWeatherForecast()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -29,6 +29,12 @@ namespace Azure_Storage_Manager.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet, Route("/")]
+        public string Home()
+        {
+            return @"Ciao!";
         }
     }
 }
