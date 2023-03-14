@@ -27,10 +27,10 @@ namespace Azure_Storage_Manager.Controllers
                 //or use this code to create the container directly, if it does not exist.
                 var createResult = await blobContainer.CreateIfNotExistsAsync();
 
-                if (createResult.HasValue)
-                {
-                    result += " - " + createResult.Value.LastModified;
-                }
+                //if (createResult.HasValue)
+                //{
+                //    result += " - " + createResult.Value.LastModified;
+                //}
 
             }
             catch (Exception ex)
