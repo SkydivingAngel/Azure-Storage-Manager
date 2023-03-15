@@ -8,17 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="WorkingDirectory\Dummy.txt" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="WorkingDirectory\Dummy.txt">
+    <Content Update="WorkingDirectory\Dummy.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
   </ItemGroup>
 
 </Project>
