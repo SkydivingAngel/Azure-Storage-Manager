@@ -107,6 +107,7 @@ namespace Azure_Storage_Manager.Controllers
             return Ok(@"File Scaricato!");
         }
 
+        [DisableRequestSizeLimit]
         [HttpPost, Route("caricafiles")]
         public async Task<IActionResult> CaricaFiles()
         {
