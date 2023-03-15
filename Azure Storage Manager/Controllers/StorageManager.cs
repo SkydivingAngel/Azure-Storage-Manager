@@ -4,6 +4,7 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
+using System.IO.Compression;
 
 namespace Azure_Storage_Manager.Controllers
 {
@@ -12,14 +13,19 @@ namespace Azure_Storage_Manager.Controllers
     public class StorageManager : ControllerBase
     {
         private IWebHostEnvironment env;
+        private readonly string contentRootPath;
+        private readonly string workingDirectory;
         private readonly IConfiguration configuration;
 
         public StorageManager(IWebHostEnvironment env, IConfiguration configuration)
         {
             this.env = env;
+            contentRootPath = env.ContentRootPath;
+            workingDirectory = Path.Combine(contentRootPath, "WorkingDirectory");
             this.configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpGet, Route("createcontainer")]
         public async Task<IActionResult> CreateContainer()
         {
@@ -54,6 +60,7 @@ namespace Azure_Storage_Manager.Controllers
             return Ok(@"Creato!");
         }
 
+        [AllowAnonymous]
         [HttpGet, Route("createfile")]
         public async Task<IActionResult> CreateFile()
         {
@@ -98,6 +105,47 @@ namespace Azure_Storage_Manager.Controllers
             }
 
             return Ok(@"File Scaricato!");
+        }
+
+        [HttpGet, Route("caricafiles")]
+        public async Task<IActionResult> CaricaFiles()
+        {
+            try
+            {
+
+                if (Request.Form.Files.Count == 0)
+                {
+                    return await Task.FromResult(new BadRequestObjectResult(@"Nessun File Inviato!"));
+                }
+
+                IFormFile file = Request.Form.Files[0];
+                var filename = file.FileName;
+
+                string zipFile = Path.Combine(workingDirectory, filename);
+
+                await using (var stream = new FileStream(zipFile, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                ZipFile.ExtractToDirectory(zipFile, workingDirectory);
+
+                var immagini = Directory.GetFiles(workingDirectory, "*.jpg", SearchOption.AllDirectories).ToList();
+
+                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
+
+                for (int i = 0; i < immagini.Count; i++)
+                {
+                    BlobClient blobClient = blobContainer.GetBlobClient(Path.GetFileName(immagini[i]));
+                    Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(immagini[i], true);// <--- true SOVRASCRIVE                    
+                }
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new BadRequestObjectResult(ex.Message));
+            }
+
+            return Ok(@"Files Caricati!");
         }
 
     }
