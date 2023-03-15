@@ -112,7 +112,6 @@ namespace Azure_Storage_Manager.Controllers
         {
             try
             {
-
                 if (Request.Form.Files.Count == 0)
                 {
                     return await Task.FromResult(new BadRequestObjectResult(@"Nessun File Inviato!"));
