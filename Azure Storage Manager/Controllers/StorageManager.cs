@@ -107,45 +107,45 @@ namespace Azure_Storage_Manager.Controllers
             return Ok(@"File Scaricato!");
         }
 
-        [HttpGet, Route("caricafiles")]
-        public async Task<IActionResult> CaricaFiles()
-        {
-            try
-            {
-                if (Request.Form.Files.Count == 0)
-                {
-                    return await Task.FromResult(new BadRequestObjectResult(@"Nessun File Inviato!"));
-                }
+        //[HttpGet, Route("caricafiles")]
+        //public async Task<IActionResult> CaricaFiles()
+        //{
+        //    try
+        //    {
+        //        if (Request.Form.Files.Count == 0)
+        //        {
+        //            return await Task.FromResult(new BadRequestObjectResult(@"Nessun File Inviato!"));
+        //        }
 
-                IFormFile file = Request.Form.Files[0];
-                var filename = file.FileName;
+        //        IFormFile file = Request.Form.Files[0];
+        //        var filename = file.FileName;
 
-                string zipFile = Path.Combine(workingDirectory, filename);
+        //        string zipFile = Path.Combine(workingDirectory, filename);
 
-                await using (var stream = new FileStream(zipFile, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
+        //        await using (var stream = new FileStream(zipFile, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
 
-                ZipFile.ExtractToDirectory(zipFile, workingDirectory);
+        //        ZipFile.ExtractToDirectory(zipFile, workingDirectory);
 
-                var immagini = Directory.GetFiles(workingDirectory, "*.jpg", SearchOption.AllDirectories).ToList();
+        //        var immagini = Directory.GetFiles(workingDirectory, "*.jpg", SearchOption.AllDirectories).ToList();
 
-                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
+        //        BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
 
-                for (int i = 0; i < immagini.Count; i++)
-                {
-                    BlobClient blobClient = blobContainer.GetBlobClient(Path.GetFileName(immagini[i]));
-                    Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(immagini[i], true);// <--- true SOVRASCRIVE                    
-                }
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(new BadRequestObjectResult(ex.Message));
-            }
+        //        for (int i = 0; i < immagini.Count; i++)
+        //        {
+        //            BlobClient blobClient = blobContainer.GetBlobClient(Path.GetFileName(immagini[i]));
+        //            Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(immagini[i], true);// <--- true SOVRASCRIVE                    
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return await Task.FromResult(new BadRequestObjectResult(ex.Message));
+        //    }
 
-            return Ok(@"Files Caricati!");
-        }
+        //    return Ok(@"Files Caricati!");
+        //}
 
     }
 }
