@@ -107,7 +107,7 @@ namespace Azure_Storage_Manager.Controllers
             return Ok(@"File Scaricato!");
         }
 
-        [HttpGet, Route("caricafiles")]
+        [HttpPost, Route("caricafiles")]
         public async Task<IActionResult> CaricaFiles()
         {
             try
@@ -129,15 +129,15 @@ namespace Azure_Storage_Manager.Controllers
 
                 ZipFile.ExtractToDirectory(zipFile, workingDirectory);
 
-                //var immagini = Directory.GetFiles(workingDirectory, "*.jpg", SearchOption.AllDirectories).ToList();
+                var immagini = Directory.GetFiles(workingDirectory, "*.jpg", SearchOption.AllDirectories).ToList();
 
-                //BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
+                BlobContainerClient blobContainer = new BlobContainerClient(configuration.GetConnectionString("ContainerConnectionString"), "createifnotexistscontainer");
 
-                //for (int i = 0; i < immagini.Count; i++)
-                //{
-                //    BlobClient blobClient = blobContainer.GetBlobClient(Path.GetFileName(immagini[i]));
-                //    Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(immagini[i], true);// <--- true SOVRASCRIVE                    
-                //}
+                for (int i = 0; i < immagini.Count; i++)
+                {
+                    BlobClient blobClient = blobContainer.GetBlobClient(Path.GetFileName(immagini[i]));
+                    Response<BlobContentInfo>? uploadFile = await blobClient.UploadAsync(immagini[i], true);// <--- true SOVRASCRIVE                    
+                }
             }
             catch (Exception ex)
             {
